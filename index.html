@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenCode + FreeLLMAPI + GitHub Pages — Tutorial Paso a Paso</title>
+  <meta name="description" content="Guía completa para instalar OpenCode, configurar FreeLLMAPI con modelos gratuitos, y publicar con GitHub Pages. Tutorial paso a paso para principiantes." />
+  <style>
+    :root {
+      --bg: #0b0c0f;
+      --surface: #14161b;
+      --surface-2: #1b1f27;
+      --text: #e8ecf2;
+      --muted: #9aa4b2;
+      --accent: #7aa2ff;
+      --accent-2: #22d3ee;
+      --border: #232936;
+      --ok: #22c55e;
+      --warn: #f59e0b;
+      --err: #ef4444;
+      --radius: 12px;
+      --maxw: 900px;
+      --gap: 1.25rem;
+      --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 600px at 10% -10%, #111822 0%, var(--bg) 60%),
+                  radial-gradient(900px 500px at 110% 10%, #0f172a 0%, var(--bg) 55%);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.65;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    header {
+      position: sticky; top: 0; z-index: 20;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav {
+      max-width: var(--maxw); margin: 0 auto; padding: 0.9rem 1rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .brand { font-weight: 700; letter-spacing: .2px; }
+    .brand span { color: var(--accent-2); }
+    .container { max-width: var(--maxw); margin: 0 auto; padding: 2.5rem 1rem 5rem; }
+    h1 { font-size: clamp(1.9rem, 1.3rem + 2.5vw, 3rem); line-height: 1.15; margin: 0 0 0.5rem; }
+    .subtitle { color: var(--muted); margin: 0 0 2.5rem; font-size: 1.1rem; }
+    .hero {
+      background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 90%, transparent), transparent);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.8rem; margin-bottom: 2.5rem;
+    }
+    .steps { display: grid; gap: var(--gap); }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1.4rem 1.4rem 1.6rem; position: relative;
+    }
+    .card h2 { margin: 0 0 0.4rem; font-size: 1.35rem; }
+    .tag {
+      display: inline-block; font-size: 0.75rem; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); margin-bottom: 0.7rem;
+    }
+    .meta { color: var(--muted); font-size: 0.95rem; margin-bottom: 0.9rem; }
+    code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    pre {
+      background: #0a0e14; border: 1px solid var(--border); border-radius: 10px;
+      padding: 1rem; overflow: auto; margin: 0.9rem 0 0;
+    }
+    pre code { color: #c7d2fe; }
+    .check { color: var(--ok); font-weight: 600; }
+    .warn { color: var(--warn); }
+    .err { color: var(--err); }
+    .grid2 { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); }
+    .note {
+      border-left: 3px solid var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--surface));
+      padding: 0.9rem 1rem; border-radius: 8px; margin: 1rem 0;
+    }
+    .toc {
+      background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 1rem; margin: 1.5rem 0;
+    }
+    .toc ol { margin: 0.5rem 0 0 1.2rem; }
+    .toc a { color: var(--text); }
+    .footer { color: var(--muted); font-size: 0.9rem; text-align: center; padding: 2rem 0; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    /* focus rings */
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <header>
+    <nav class="nav" aria-label="Principal">
+      <div class="brand">OpenCode <span>×</span> FreeLLMAPI <span>×</span> GitHub Pages</div>
+      <a href="#paso-7">Publicar en GitHub Pages</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Tutorial paso a paso: crea web con OpenCode + modelos gratuitos</h1>
+    <p class="subtitle">Instala OpenCode, conecta FreeLLMAPI, usa GitHub para tu repo y publica en GitHub Pages. Sin coste, 100% local y sin Dreamweaver.</p>
+
+    <div class="hero" role="note" aria-label="Resumen">
+      <p><strong>Objetivo:</strong> En 7 pasos tendrás un entorno de desarrollo moderno con IA gratuita y una web publicada.</p>
+      <p class="warn">⚠️ Todo lo que hagas queda en tu máquina y en tu repo GitHub. FreeLLMAPI es un agregador de modelos de código abierto.</p>
+    </div>
+
+    <nav class="toc" aria-label="Tabla de contenidos">
+      <strong>Contenido</strong>
+      <ol>
+        <li><a href="#paso-1">Crear cuenta GitHub</a></li>
+        <li><a href="#paso-2">Instalar OpenCode</a></li>
+        <li><a href="#paso-3">Configurar FreeLLMAPI</a></li>
+        <li><a href="#paso-4">Conectar OpenCode a FreeLLMAPI</a></li>
+        <li><a href="#paso-5">Crear primer proyecto</a></li>
+        <li><a href="#paso-6">Subir a GitHub</a></li>
+        <li><a href="#paso-7">Publicar en GitHub Pages</a></li>
+      </ol>
+    </nav>
+
+    <section class="steps" aria-label="Pasos del tutorial">
+      <!-- PASO 1 -->
+      <article id="paso-1" class="card">
+        <span class="tag">Paso 1</span>
+        <h2>Crear cuenta en GitHub</h2>
+        <p class="meta">Necesitas un repositorio para almacenar el proyecto y publicar en GitHub Pages.</p>
+        <ol>
+          <li>Ve a <a href="https://github.com" target="_blank" rel="noopener">github.com</a> y crea una cuenta.</li>
+          <li>Verifica el correo.</li>
+          <li>New Repository → nombre: <code>opencode-web</code> → <strong>Public</strong> → <em>Add a README</em> → Create.</li>
+        </ol>
+        <div class="note">Consejo: usa un nombre de usuario legible, será la URL de tu web: <code>https://TU-USUARIO.github.io/opencode-web/</code></div>
+      </article>
+
+      <!-- PASO 2 -->
+      <article id="paso-2" class="card">
+        <span class="tag">Paso 2</span>
+        <h2>Instalar OpenCode</h2>
+        <p class="meta">OpenCode es el CLI/TUI que usaremos para trabajar con IA desde la terminal.</p>
+        <p>Windows / PowerShell:</p>
+        <pre><code>winget install opencode.opencode</code></pre>
+        <p>Mac:</p>
+        <pre><code>brew install opencode</code></pre>
+        <p>Verifica:</p>
+        <pre><code>opencode --version</code></pre>
+        <div class="note">Primera vez: <code>opencode login</code> o configura un proveedor. Nosotros usaremos FreeLLMAPI como proveedor.</div>
+      </article>
+
+      <!-- PASO 3 -->
+      <article id="paso-3" class="card">
+        <span class="tag">Paso 3</span>
+        <h2>Configurar FreeLLMAPI</h2>
+        <p class="meta">FreeLLMAPI agrega modelos de código abierto y gratuitos (Gemma, Mistral, Llama, etc.).</p>
+        <ol>
+          <li>Crea una cuenta en FreeLLMAPI (o similar servicio gratuito que soporte OpenAI-compatible API).</li>
+          <li>Copia tu <code>API_KEY</code>.</li>
+          <li>Anota la Base URL, típicamente: <code>https://api.freellmapi.com/v1</code> (verifica en tu dashboard).</li>
+        </ol>
+        <div class="note">Los modelos gratuitos tienen límites de tasa. Para desarrollo y tutorial es suficiente. Guarda la key en un gestor de contraseñas.</div>
+      </article>
+
+      <!-- PASO 4 -->
+      <article id="paso-4" class="card">
+        <span class="tag">Paso 4</span>
+        <h2>Conectar OpenCode a FreeLLMAPI</h2>
+        <p class="meta">Configura un proveedor personalizado en OpenCode.</p>
+        <p>Windows PowerShell:</p>
+        <pre><code>opencode config set providers.freellmapi.baseUrl "https://api.freellmapi.com/v1"
+opencode config set providers.freellmapi.apiKey "TU_API_KEY_AQUÍ"
+opencode config set model "freellmapi/gemma-2-9b-it"  # ejemplo de modelo gratuito
+</code></pre>
+        <p>Alternativa: edita <code>~/.config/opencode/opencode.json</code> directamente.</p>
+        <div class="note">Si usas otro proveedor, cambia <code>baseUrl</code> y el <code>model</code>. Prueba con <code>opencode chat "hola"</code>.</div>
+      </article>
+
+      <!-- PASO 5 -->
+      <article id="paso-5" class="card">
+        <span class="tag">Paso 5</span>
+        <h2>Crear primer proyecto</h2>
+        <p class="meta">Usa skills de diseño para generar web con IA guiada.</p>
+        <p>Abre la carpeta del proyecto:</p>
+        <pre><code>cd D:\tutorial-web
+opencode worktree create opencode-web</code></pre>
+        <p>Genera con prompt guiado por skill:</p>
+        <pre><code>Use frontend-design to scaffold a simple HTML/CSS/JS site with index.html, style.css, script.js.
+Create a hero, features, and footer. Mobile-first, semantic HTML, accessible.</code></pre>
+        <div class="grid2">
+          <div class="card">
+            <h3>Skills recomendadas</h3>
+            <ul>
+              <li>frontend-design</li>
+              <li>web-typography</li>
+              <li>color-systems</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Buenas prácticas</h3>
+            <ul>
+              <li>Mobile-first</li>
+              <li>Tokens CSS con :root</li>
+              <li>No usar &lt;table&gt; para layout</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <!-- PASO 6 -->
+      <article id="paso-6" class="card">
+        <span class="tag">Paso 6</span>
+        <h2>Subir a GitHub</h2>
+        <p class="meta">Inicializa git y envía los cambios.</p>
+        <pre><code>git init
+git remote add origin https://github.com/TU-USUARIO/opencode-web.git
+git add .
+git commit -m "Initial commit: tutorial layout"
+git branch -M main
+git push -u origin main</code></pre>
+        <div class="note">En Windows puedes usar GitHub Desktop si prefieres GUI. El resultado es el mismo.</div>
+      </article>
+
+      <!-- PASO 7 -->
+      <article id="paso-7" class="card">
+        <span class="tag">Paso 7</span>
+        <h2>Publicar en GitHub Pages</h2>
+        <p class="meta">Activa Pages en el repo.</p>
+        <ol>
+          <li>GitHub → repositorio → <strong>Settings → Pages</strong>.</li>
+          <li>Source: <em>Deploy from a branch</em> → Branch <code>main</code> → Folder <code>/ (root)</code>.</li>
+          <li>Save. Espera 1-2 minutos.</li>
+          <li>Tu web estará en: <code>https://TU-USUARIO.github.io/opencode-web/</code></li>
+        </ol>
+        <div class="note">Si cambias <code>index.html</code>, comitea y haz push. GitHub Pages se actualiza automáticamente.</div>
+      </article>
+    </section>
+
+    <section class="card" aria-label="Siguientes pasos">
+      <h2>¿Siguiente?</h2>
+      <ul>
+        <li>Prueba <code>Use web-typography to improve font loading and fluid scales</code>.</li>
+        <li>Prueba <code>Use color-systems to define OKLCH tokens and dark mode</code>.</li>
+        <li>Automatiza commits con <code>opencode</code> y un agent que revise el código.</li>
+      </ul>
+    </section>
+
+    <div class="footer">
+      Hecho con OpenCode y skills de diseño. Tutorial para principiantes — 2026
+    </div>
+  </main>
+</body>
+</html>
